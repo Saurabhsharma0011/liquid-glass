@@ -5,9 +5,12 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'Qwery - Ai powered prompts for everything',
+  description: 'A platform which gives you prompts for everything you need to succeed',
+  generator: 'Qwery',
+  icons: {
+    icon: '/cropped_circle_image.png',
+  },
 }
 
 export default function RootLayout({

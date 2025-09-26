@@ -721,33 +721,54 @@ export default function HomePage() {
 
       {/* Header Navigation */}
       <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 lg:px-12">
-        <div className="flex items-center space-x-2 pl-3 sm:pl-6 lg:pl-12">
-          <img src="/v0-logo.png" alt="Logo" className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12" />
+        <div className="flex items-center space-x-0">
+          <img src="/bg-remove.png" alt="Qwery Logo" className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-24 xl:h-24" />
+          <span className="text-white font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl tracking-wider">
+            QWERY
+          </span>
         </div>
 
         <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-          <a href="#" className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group">
+          <button 
+            onClick={() => {
+              // Add your Features functionality here
+              console.log('Features clicked');
+            }}
+            className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group cursor-pointer bg-transparent border-none"
+          >
             Features
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-          </a>
-          <a href="#" className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group">
+          </button>
+          <button 
+            onClick={() => {
+              // Add your Pricing functionality here
+              console.log('Pricing clicked');
+            }}
+            className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group cursor-pointer bg-transparent border-none"
+          >
             Pricing
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-          </a>
-          <a href="#" className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group">
+          </button>
+          <button 
+            onClick={() => {
+              // Add your About Us functionality here
+              console.log('About us clicked');
+            }}
+            className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group cursor-pointer bg-transparent border-none"
+          >
             About us
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-          </a>
-          <a href="#" className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group">
-            Contact
+          </button>
+          <button 
+            onClick={() => {
+              window.open('https://x.com/qwerydotxyz?s=21', '_blank', 'noopener,noreferrer');
+            }}
+            className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group cursor-pointer bg-transparent border-none"
+          >
+            Twitter
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-          </a>
+          </button>
         </nav>
-
-        {/* Mobile menu button */}
-        <button className="md:hidden text-white p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          <Menu className="w-6 h-6" />
-        </button>
 
         <ShimmerButton 
           className="hidden md:flex bg-orange-500 hover:bg-orange-600 text-white px-4 lg:px-6 py-2 rounded-xl text-sm lg:text-base font-medium shadow-lg"
@@ -760,25 +781,55 @@ export default function HomePage() {
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-16 left-0 right-0 bg-black/95 backdrop-blur-sm border-b border-white/10 z-20">
           <nav className="flex flex-col space-y-4 px-6 py-6">
-            <a href="#" className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit">
+            <button 
+              onClick={() => {
+                // Add your Features functionality here
+                console.log('Features clicked');
+                setMobileMenuOpen(false); // Close mobile menu
+              }}
+              className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit cursor-pointer bg-transparent border-none text-left"
+            >
               Features
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a href="#" className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit">
+            </button>
+            <button 
+              onClick={() => {
+                // Add your Pricing functionality here
+                console.log('Pricing clicked');
+                setMobileMenuOpen(false); // Close mobile menu
+              }}
+              className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit cursor-pointer bg-transparent border-none text-left"
+            >
               Pricing
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a href="#" className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit">
+            </button>
+            <button 
+              onClick={() => {
+                // Add your About Us functionality here
+                console.log('About us clicked');
+                setMobileMenuOpen(false); // Close mobile menu
+              }}
+              className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit cursor-pointer bg-transparent border-none text-left"
+            >
               About us
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a href="#" className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit">
-              Contact
+            </button>
+            <button 
+              onClick={() => {
+                window.open('https://x.com/qwerydotxyz?s=21', '_blank', 'noopener,noreferrer');
+                setMobileMenuOpen(false); // Close mobile menu
+              }}
+              className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit cursor-pointer bg-transparent border-none text-left"
+            >
+              Twitter
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-            </a>
+            </button>
             <ShimmerButton 
               className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium shadow-lg w-fit"
-              onClick={() => setShowPreRegisterPopup(true)}
+              onClick={() => {
+                setShowPreRegisterPopup(true);
+                setMobileMenuOpen(false); // Close mobile menu
+              }}
             >
               Pre-register
             </ShimmerButton>
@@ -796,7 +847,7 @@ export default function HomePage() {
           </LineShadowText>
         </h1>
 
-        <p className="text-white/70 text-sm sm:text-base md:text-sm lg:text-2xl mb-6 sm:mb-8 max-w-2xl text-pretty">
+        <p className="text-white/70 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl mb-6 sm:mb-8 max-w-3xl text-pretty leading-relaxed">
           Discover Creative Inspiration and Ideas
           <br className="hidden sm:block" />
           <span className="sm:hidden"> </span>
