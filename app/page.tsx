@@ -4,11 +4,23 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Menu } from "lucide-react"
 import { LineShadowText } from "@/components/line-shadow-text"
 import { ShimmerButton } from "@/components/shimmer-button"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showPreRegisterPopup, setShowPreRegisterPopup] = useState(false)
+  const [showCelebration, setShowCelebration] = useState(false)
+
+  // Auto-hide celebration notification after 5 seconds
+  useEffect(() => {
+    if (showCelebration) {
+      const timer = setTimeout(() => {
+        setShowCelebration(false)
+      }, 5000)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [showCelebration])
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -729,110 +741,68 @@ export default function HomePage() {
         </div>
 
         <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
-          <button 
-            onClick={() => {
-              // Add your Features functionality here
-              console.log('Features clicked');
-            }}
-            className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group cursor-pointer bg-transparent border-none"
-          >
-            Features
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-          </button>
-          <button 
-            onClick={() => {
-              // Add your Pricing functionality here
-              console.log('Pricing clicked');
-            }}
-            className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group cursor-pointer bg-transparent border-none"
-          >
-            Pricing
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-          </button>
-          <button 
-            onClick={() => {
-              // Add your About Us functionality here
-              console.log('About us clicked');
-            }}
-            className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group cursor-pointer bg-transparent border-none"
-          >
-            About us
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-          </button>
-          <button 
-            onClick={() => {
-              window.open('https://x.com/qwerydotxyz?s=21', '_blank', 'noopener,noreferrer');
-            }}
-            className="relative text-white/80 hover:text-white transition-all duration-300 text-sm lg:text-base group cursor-pointer bg-transparent border-none"
-          >
-            Twitter
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-          </button>
+          {/* Navigation items removed */}
         </nav>
 
-        <ShimmerButton 
-          className="hidden md:flex bg-orange-500 hover:bg-orange-600 text-white px-4 lg:px-6 py-2 rounded-xl text-sm lg:text-base font-medium shadow-lg"
-          onClick={() => setShowPreRegisterPopup(true)}
-        >
-          Pre-register
-        </ShimmerButton>
+        <div className="hidden md:flex items-center space-x-4">
+          <ShimmerButton 
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 lg:px-6 py-2 rounded-xl text-sm lg:text-base font-medium shadow-lg transition-all duration-700 ease-out transform hover:scale-105 hover:shadow-xl hover:shadow-orange-500/25"
+            onClick={() => setShowPreRegisterPopup(true)}
+          >
+            Pre-register
+          </ShimmerButton>
+          
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              window.open('https://x.com/Qwerydotxyz', '_blank', 'noopener,noreferrer');
+            }}
+            className="group transition-all duration-75 ease-out transform hover:scale-110"
+            aria-label="Follow us on Twitter"
+          >
+            <img 
+              src="/twitter.png" 
+              alt="Twitter" 
+              className="w-12 h-12 lg:w-14 lg:h-14 opacity-90 group-hover:opacity-100 transition-opacity duration-75 ease-out"
+            />
+          </button>
+        </div>
       </header>
 
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-16 left-0 right-0 bg-black/95 backdrop-blur-sm border-b border-white/10 z-20">
           <nav className="flex flex-col space-y-4 px-6 py-6">
-            <button 
-              onClick={() => {
-                // Add your Features functionality here
-                console.log('Features clicked');
-                setMobileMenuOpen(false); // Close mobile menu
-              }}
-              className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit cursor-pointer bg-transparent border-none text-left"
-            >
-              Features
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-            </button>
-            <button 
-              onClick={() => {
-                // Add your Pricing functionality here
-                console.log('Pricing clicked');
-                setMobileMenuOpen(false); // Close mobile menu
-              }}
-              className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit cursor-pointer bg-transparent border-none text-left"
-            >
-              Pricing
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-            </button>
-            <button 
-              onClick={() => {
-                // Add your About Us functionality here
-                console.log('About us clicked');
-                setMobileMenuOpen(false); // Close mobile menu
-              }}
-              className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit cursor-pointer bg-transparent border-none text-left"
-            >
-              About us
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-            </button>
-            <button 
-              onClick={() => {
-                window.open('https://x.com/qwerydotxyz?s=21', '_blank', 'noopener,noreferrer');
-                setMobileMenuOpen(false); // Close mobile menu
-              }}
-              className="relative text-white/80 hover:text-white transition-all duration-300 group w-fit cursor-pointer bg-transparent border-none text-left"
-            >
-              Twitter
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></span>
-            </button>
-            <ShimmerButton 
-              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium shadow-lg w-fit"
-              onClick={() => {
-                setShowPreRegisterPopup(true);
-                setMobileMenuOpen(false); // Close mobile menu
-              }}
-            >
-              Pre-register
-            </ShimmerButton>
+            <div className="flex items-center justify-between">
+              <ShimmerButton 
+                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium shadow-lg w-fit"
+                onClick={() => {
+                  setShowPreRegisterPopup(true);
+                  setMobileMenuOpen(false); // Close mobile menu
+                }}
+              >
+                Pre-register
+              </ShimmerButton>
+              
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open('https://x.com/Qwerydotxyz', '_blank', 'noopener,noreferrer');
+                  setMobileMenuOpen(false); // Close mobile menu
+                }}
+                className="group transition-all duration-75 ease-out transform hover:scale-110"
+                aria-label="Follow us on Twitter"
+              >
+                <img 
+                  src="/twitter.png" 
+                  alt="Twitter" 
+                  className="w-12 h-12 opacity-90 group-hover:opacity-100 transition-opacity duration-75 ease-out"
+                />
+              </button>
+            </div>
           </nav>
         </div>
       )}
@@ -854,10 +824,10 @@ export default function HomePage() {
           For Every Project and Vision.
         </p>
 
-        <Button className="group relative bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base md:text-xs lg:text-lg font-semibold flex items-center gap-2 backdrop-blur-sm border border-orange-400/30 shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/40 transition-all duration-300 hover:scale-105 hover:-translate-y-0.5">
+        <Button className="group relative bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base md:text-xs lg:text-lg font-semibold flex items-center gap-2 backdrop-blur-sm border border-orange-400/30 shadow-lg shadow-orange-500/25 hover:shadow-2xl hover:shadow-orange-500/50 transition-all duration-700 ease-out hover:scale-110 hover:-translate-y-2">
           Get Started
-          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 group-hover:-rotate-12 transition-transform duration-300" />
-          <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-2 group-hover:-rotate-12 transition-transform duration-700 ease-out" />
+          <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-white/0 via-white/15 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out" />
         </Button>
 
       </main>
@@ -890,7 +860,11 @@ export default function HomePage() {
               Be the first to know when we launch
             </p>
             
-            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setShowPreRegisterPopup(false); }}>
+            <form className="space-y-4" onSubmit={(e) => { 
+              e.preventDefault(); 
+              setShowPreRegisterPopup(false); 
+              setShowCelebration(true);
+            }}>
               <div>
                 <input
                   type="text"
@@ -916,6 +890,77 @@ export default function HomePage() {
                 Pre-register Now
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Contact Us Section */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <div className="flex items-center space-x-2 text-right">
+          <span className="text-xs text-white/60">Contact Us -</span>
+          <button
+            type="button"
+            onClick={async (e) => {
+              e.preventDefault()
+              try {
+                await navigator.clipboard.writeText('support@qwery.xyz')
+                // You could add a toast notification here if needed
+                console.log('Email copied to clipboard!')
+              } catch (err) {
+                console.error('Failed to copy email:', err)
+                // Fallback: open mailto link
+                window.location.href = 'mailto:support@qwery.xyz'
+              }
+            }}
+            className="text-xs text-white/70 hover:text-white transition-colors duration-200 hover:underline cursor-pointer"
+            title="Click to copy email address"
+          >
+            support@qwery.xyz
+          </button>
+        </div>
+      </div>
+
+      {/* Celebration Notification */}
+      {showCelebration && (
+        <div className="fixed bottom-20 right-6 z-50 animate-in slide-in-from-right-full duration-500 ease-out">
+          <div className="relative bg-black/80 backdrop-blur-lg text-white p-4 rounded-xl shadow-2xl w-80 border border-white/10">
+            {/* Subtle celebration particles */}
+            <div className="absolute inset-0 overflow-hidden rounded-xl">
+              <div className="absolute top-2 left-4 w-1 h-1 bg-green-400/60 rounded-full animate-pulse" style={{ animationDelay: '0ms', animationDuration: '2s' }}></div>
+              <div className="absolute top-3 right-6 w-1 h-1 bg-emerald-400/60 rounded-full animate-pulse" style={{ animationDelay: '500ms', animationDuration: '2.5s' }}></div>
+              <div className="absolute bottom-3 left-6 w-1 h-1 bg-green-300/60 rounded-full animate-pulse" style={{ animationDelay: '1000ms', animationDuration: '2.2s' }}></div>
+            </div>
+            
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setShowCelebration(false)
+              }}
+              className="absolute top-2 right-2 text-white/60 hover:text-white/90 transition-all duration-200 hover:scale-110 transform p-1 rounded-md hover:bg-white/10 z-20"
+              aria-label="Close notification"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Content */}
+            <div className="relative z-10 pr-6">
+              <div className="flex items-center mb-2">
+                <div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center mr-3">
+                  <svg className="w-3.5 h-3.5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-medium text-white">Registration Successful</h3>
+              </div>
+              <p className="text-white/70 text-xs leading-relaxed ml-9">
+                Confirmation mail will be sent to you very soon. Thank you!
+              </p>
+            </div>
           </div>
         </div>
       )}
