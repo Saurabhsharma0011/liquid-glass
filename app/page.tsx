@@ -4,11 +4,15 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Menu } from "lucide-react"
 import { LineShadowText } from "@/components/line-shadow-text"
 import { ShimmerButton } from "@/components/shimmer-button"
+import { TermsOfServiceModal } from "@/components/terms-of-service-modal"
+import { PrivacyPolicyModal } from "@/components/privacy-policy-modal"
 import { useState, useEffect } from "react"
 
 export default function HomePage() {
   const [showPreRegisterPopup, setShowPreRegisterPopup] = useState(false)
   const [showCelebration, setShowCelebration] = useState(false)
+  const [showTermsModal, setShowTermsModal] = useState(false)
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false)
 
   // Auto-hide celebration notification after 5 seconds
   useEffect(() => {
@@ -857,6 +861,30 @@ export default function HomePage() {
         </div>
       )}
 
+      {/* Footer Section */}
+      <div className="fixed bottom-4 left-4 z-40">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+          <button
+            type="button"
+            onClick={() => {
+              setShowPrivacyModal(true);
+            }}
+            className="text-xs text-white/70 hover:text-white transition-colors duration-200 hover:underline cursor-pointer"
+          >
+            Privacy Policy
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setShowTermsModal(true);
+            }}
+            className="text-xs text-white/70 hover:text-white transition-colors duration-200 hover:underline cursor-pointer"
+          >
+            Terms of Service
+          </button>
+        </div>
+      </div>
+
       {/* Contact Us Section */}
       <div className="fixed bottom-6 right-6 z-40">
         <div className="flex items-center space-x-2 text-right">
@@ -882,6 +910,18 @@ export default function HomePage() {
           </button>
         </div>
       </div>
+
+      {/* Terms of Service Modal */}
+      <TermsOfServiceModal 
+        isOpen={showTermsModal} 
+        onClose={() => setShowTermsModal(false)} 
+      />
+
+      {/* Privacy Policy Modal */}
+      <PrivacyPolicyModal 
+        isOpen={showPrivacyModal} 
+        onClose={() => setShowPrivacyModal(false)} 
+      />
 
       {/* Celebration Notification */}
       {showCelebration && (
