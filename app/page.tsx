@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Menu } from "lucide-react"
 import { LineShadowText } from "@/components/line-shadow-text"
 import { ShimmerButton } from "@/components/shimmer-button"
+import { TermsOfServiceModal } from "@/components/terms-of-service-modal"
+import { PrivacyPolicyModal } from "@/components/privacy-policy-modal"
 import { useState, useEffect } from "react"
 
 export default function HomePage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showPreRegisterPopup, setShowPreRegisterPopup] = useState(false)
   const [showCelebration, setShowCelebration] = useState(false)
+  const [showTermsModal, setShowTermsModal] = useState(false)
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false)
 
   // Auto-hide celebration notification after 5 seconds
   useEffect(() => {
@@ -25,7 +28,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-black">
-        {/* Flowing wave rays overlay */}
+        {/* Flowing wave rays overlay - reduced complexity on mobile */}
         <div className="absolute inset-0">
           <svg
             className="absolute inset-0 w-full h-full"
@@ -732,21 +735,21 @@ export default function HomePage() {
       `}</style>
 
       {/* Header Navigation */}
-      <header className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 lg:px-12">
+      <header className="relative z-10 flex items-center justify-between px-3 sm:px-4 md:px-6 py-3 sm:py-4 lg:px-12">
         <div className="flex items-center space-x-0">
-          <img src="/bg-remove.png" alt="Qwery Logo" className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-24 xl:h-24" />
-          <span className="text-white font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl tracking-wider">
+          <img src="/bg-remove.png" alt="Qwery Logo" className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24" />
+          <span className="text-white font-bold text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl tracking-wider">
             QWERY
           </span>
         </div>
 
-        <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
+        <nav className="flex items-center space-x-2 sm:space-x-4 md:space-x-6 lg:space-x-8">
           {/* Navigation items removed */}
         </nav>
 
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
           <ShimmerButton 
-            className="bg-orange-500 hover:bg-orange-600 text-white px-4 lg:px-6 py-2 rounded-xl text-sm lg:text-base font-medium shadow-lg transition-all duration-700 ease-out transform hover:scale-105 hover:shadow-xl hover:shadow-orange-500/25"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-2 sm:px-3 md:px-4 lg:px-6 py-1 sm:py-1.5 md:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm md:text-base font-medium shadow-lg transition-all duration-700 ease-out transform hover:scale-105 hover:shadow-xl hover:shadow-orange-500/25"
             onClick={() => setShowPreRegisterPopup(true)}
           >
             Pre-register
@@ -765,68 +768,32 @@ export default function HomePage() {
             <img 
               src="/twitter.png" 
               alt="Twitter" 
-              className="w-12 h-12 lg:w-14 lg:h-14 opacity-90 group-hover:opacity-100 transition-opacity duration-75 ease-out"
+              className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 opacity-90 group-hover:opacity-100 transition-opacity duration-75 ease-out"
             />
           </button>
         </div>
       </header>
 
-      {mobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 bg-black/95 backdrop-blur-sm border-b border-white/10 z-20">
-          <nav className="flex flex-col space-y-4 px-6 py-6">
-            <div className="flex items-center justify-between">
-              <ShimmerButton 
-                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium shadow-lg w-fit"
-                onClick={() => {
-                  setShowPreRegisterPopup(true);
-                  setMobileMenuOpen(false); // Close mobile menu
-                }}
-              >
-                Pre-register
-              </ShimmerButton>
-              
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  window.open('https://x.com/Qwerydotxyz', '_blank', 'noopener,noreferrer');
-                  setMobileMenuOpen(false); // Close mobile menu
-                }}
-                className="group transition-all duration-75 ease-out transform hover:scale-110"
-                aria-label="Follow us on Twitter"
-              >
-                <img 
-                  src="/twitter.png" 
-                  alt="Twitter" 
-                  className="w-12 h-12 opacity-90 group-hover:opacity-100 transition-opacity duration-75 ease-out"
-                />
-              </button>
-            </div>
-          </nav>
-        </div>
-      )}
-
       {/* Main Content */}
-      <main className="relative z-10 flex flex-col items-start justify-start sm:justify-center min-h-[calc(100vh-80px)] px-4 sm:px-6 lg:px-12 max-w-6xl pt-4 sm:-mt-12 lg:-mt-24 pl-6 sm:pl-12 lg:pl-20">
+      <main className="relative z-10 flex flex-col items-start justify-center min-h-[calc(100vh-120px)] px-4 sm:px-6 md:px-8 lg:px-12 max-w-6xl pt-8 sm:pt-4 md:-mt-8 lg:-mt-16 xl:-mt-24 pl-4 sm:pl-6 md:pl-12 lg:pl-20">
 
-        <h1 className="text-white text-4xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-8xl font-bold leading-tight mb-4 sm:mb-6 text-balance">
+        <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-8xl font-bold leading-tight mb-4 sm:mb-6 text-balance">
           Prompts for every idea at{" "}
           <LineShadowText className="italic font-light" shadowColor="white">
             Place
           </LineShadowText>
         </h1>
 
-        <p className="text-white/70 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl mb-6 sm:mb-8 max-w-3xl text-pretty leading-relaxed">
+        <p className="text-white/70 text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl mb-6 sm:mb-8 max-w-3xl text-pretty leading-relaxed">
           Discover Creative Inspiration and Ideas
           <br className="hidden sm:block" />
           <span className="sm:hidden"> </span>
           For Every Project and Vision.
         </p>
 
-        <Button className="group relative bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base md:text-xs lg:text-lg font-semibold flex items-center gap-2 backdrop-blur-sm border border-orange-400/30 shadow-lg shadow-orange-500/25 hover:shadow-2xl hover:shadow-orange-500/50 transition-all duration-700 ease-out hover:scale-110 hover:-translate-y-2">
+        <Button className="group relative bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-lg text-xs sm:text-sm md:text-base lg:text-lg font-semibold flex items-center gap-2 backdrop-blur-sm border border-orange-400/30 shadow-lg shadow-orange-500/25 hover:shadow-2xl hover:shadow-orange-500/50 transition-all duration-700 ease-out hover:scale-110 hover:-translate-y-2">
           Get Started
-          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-2 group-hover:-rotate-12 transition-transform duration-700 ease-out" />
+          <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 group-hover:translate-x-2 group-hover:-rotate-12 transition-transform duration-700 ease-out" />
           <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-white/0 via-white/15 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out" />
         </Button>
 
@@ -834,7 +801,7 @@ export default function HomePage() {
 
       {/* Pre-registration Popup Modal */}
       {showPreRegisterPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           {/* Backdrop */}
           <div 
             className="absolute inset-0 bg-black/80 backdrop-blur-sm"
@@ -842,25 +809,25 @@ export default function HomePage() {
           />
           
           {/* Modal Content */}
-          <div className="relative bg-black/90 backdrop-blur-lg border border-white/20 rounded-2xl p-6 sm:p-8 shadow-2xl w-full max-w-md mx-auto">
+          <div className="relative bg-black/90 backdrop-blur-lg border border-white/20 rounded-lg sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl w-full max-w-xs sm:max-w-md mx-auto">
             {/* Close Button */}
             <button
               onClick={() => setShowPreRegisterPopup(false)}
-              className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-white/60 hover:text-white transition-colors"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            <h2 className="text-white text-xl sm:text-2xl font-semibold mb-2 text-center pr-8">
+            <h2 className="text-white text-lg sm:text-xl md:text-2xl font-semibold mb-2 text-center pr-6 sm:pr-8">
               Join the Waitlist
             </h2>
-            <p className="text-white/70 text-sm sm:text-base mb-6 text-center">
+            <p className="text-white/70 text-xs sm:text-sm md:text-base mb-4 sm:mb-6 text-center">
               Be the first to know when we launch
             </p>
             
-            <form className="space-y-4" onSubmit={(e) => { 
+            <form className="space-y-3 sm:space-y-4" onSubmit={(e) => { 
               e.preventDefault(); 
               setShowPreRegisterPopup(false); 
               setShowCelebration(true);
@@ -869,7 +836,7 @@ export default function HomePage() {
                 <input
                   type="text"
                   placeholder="Your Name"
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                   required
                 />
               </div>
@@ -878,7 +845,7 @@ export default function HomePage() {
                 <input
                   type="email"
                   placeholder="Your Email"
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg bg-white/5 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base"
                   required
                 />
               </div>
@@ -893,6 +860,30 @@ export default function HomePage() {
           </div>
         </div>
       )}
+
+      {/* Footer Section */}
+      <div className="fixed bottom-4 left-4 z-40">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+          <button
+            type="button"
+            onClick={() => {
+              setShowPrivacyModal(true);
+            }}
+            className="text-xs text-white/70 hover:text-white transition-colors duration-200 hover:underline cursor-pointer"
+          >
+            Privacy Policy
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setShowTermsModal(true);
+            }}
+            className="text-xs text-white/70 hover:text-white transition-colors duration-200 hover:underline cursor-pointer"
+          >
+            Terms of Service
+          </button>
+        </div>
+      </div>
 
       {/* Contact Us Section */}
       <div className="fixed bottom-6 right-6 z-40">
@@ -919,6 +910,18 @@ export default function HomePage() {
           </button>
         </div>
       </div>
+
+      {/* Terms of Service Modal */}
+      <TermsOfServiceModal 
+        isOpen={showTermsModal} 
+        onClose={() => setShowTermsModal(false)} 
+      />
+
+      {/* Privacy Policy Modal */}
+      <PrivacyPolicyModal 
+        isOpen={showPrivacyModal} 
+        onClose={() => setShowPrivacyModal(false)} 
+      />
 
       {/* Celebration Notification */}
       {showCelebration && (
