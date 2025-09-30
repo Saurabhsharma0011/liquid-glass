@@ -37,7 +37,7 @@ export function PrivacyPolicyModal({ isOpen, onClose }: PrivacyPolicyModalProps)
           </h1>
           
           <p className="text-white/80 text-sm sm:text-base mb-6 text-center">
-            <strong>Effective Date:</strong> September 30, 2025
+            <strong>Effective Date:</strong> September 15, 2025
           </p>
 
           <div className="text-white/90 text-sm sm:text-base leading-relaxed space-y-4">
