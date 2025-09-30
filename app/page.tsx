@@ -1,14 +1,64 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Menu } from "lucide-react"
+import { ArrowRight, Menu, ChevronLeft, ChevronRight, Sparkles, Zap, Rocket, Brain, Code, Palette, X } from "lucide-react"
 import { LineShadowText } from "@/components/line-shadow-text"
 import { ShimmerButton } from "@/components/shimmer-button"
 import { TermsOfServiceModal } from "@/components/terms-of-service-modal"
 import { PrivacyPolicyModal } from "@/components/privacy-policy-modal"
+import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
 
+const slides = [
+  {
+    id: 1,
+    icon: Sparkles,
+    title: "Every Prompt You Need",
+    subtitle: "Your Ultimate Prompt Marketplace",
+    description:
+      "Discover thousands of AI prompts for every use case. From creative writing to coding, business to design.",
+    features: ["10,000+ Prompts", "All Categories", "Instant Access"],
+  },
+  {
+    id: 2,
+    icon: Brain,
+    title: "AI-Powered Creativity",
+    subtitle: "Unlock Your Potential",
+    description: "Transform your ideas into reality with expertly crafted prompts for ChatGPT, Midjourney, and more.",
+    features: ["Expert Crafted", "Tested & Verified", "Regular Updates"],
+  },
+  {
+    id: 3,
+    icon: Code,
+    title: "Developer Prompts",
+    subtitle: "Code Smarter, Not Harder",
+    description: "Access specialized prompts for coding, debugging, architecture design, and technical documentation.",
+    features: ["Code Generation", "Bug Fixing", "Documentation"],
+  },
+  {
+    id: 4,
+    icon: Palette,
+    title: "Creative & Design",
+    subtitle: "Bring Your Vision to Life",
+    description: "Perfect prompts for image generation, graphic design, branding, and creative storytelling.",
+    features: ["Image Prompts", "Design Systems", "Brand Identity"],
+  },
+  {
+    id: 5,
+    icon: Rocket,
+    title: "Business & Marketing",
+    subtitle: "Grow Your Business",
+    description: "Professional prompts for marketing copy, business strategy, sales, and customer engagement.",
+    features: ["Marketing Copy", "Strategy Plans", "Sales Scripts"],
+  },
+]
+
 export default function HomePage() {
+  const [showTrailer, setShowTrailer] = useState(true)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [direction, setDirection] = useState<"left" | "right">("right")
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [showMessage, setShowMessage] = useState(false)
   const [showPreRegisterPopup, setShowPreRegisterPopup] = useState(false)
   const [showCelebration, setShowCelebration] = useState(false)
   const [showTermsModal, setShowTermsModal] = useState(false)
@@ -24,6 +74,292 @@ export default function HomePage() {
       return () => clearTimeout(timer)
     }
   }, [showCelebration])
+
+  // Auto-advance trailer slides
+  useEffect(() => {
+    if (showTrailer && !isAnimating) {
+      const timer = setTimeout(() => {
+        nextSlide()
+      }, 4000) // Auto advance every 4 seconds
+      
+      return () => clearTimeout(timer)
+    }
+  }, [currentSlide, showTrailer, isAnimating])
+
+  const nextSlide = () => {
+    if (isAnimating) return
+    setIsAnimating(true)
+    setDirection("right")
+    setCurrentSlide((prev) => (prev + 1) % slides.length)
+    setTimeout(() => setIsAnimating(false), 600)
+  }
+
+  const prevSlide = () => {
+    if (isAnimating) return
+    setIsAnimating(true)
+    setDirection("left")
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+    setTimeout(() => setIsAnimating(false), 600)
+  }
+
+  const goToSlide = (index: number) => {
+    if (isAnimating || index === currentSlide) return
+    setIsAnimating(true)
+    setDirection(index > currentSlide ? "right" : "left")
+    setCurrentSlide(index)
+    setTimeout(() => setIsAnimating(false), 600)
+  }
+
+  const handleExploreClick = () => {
+    setShowMessage(true)
+  }
+
+  const handleSkipTrailer = () => {
+    setShowTrailer(false)
+  }
+
+  // If trailer is showing, render trailer component
+  if (showTrailer) {
+    const current = slides[currentSlide]
+    const Icon = current.icon
+
+    return (
+      <>
+        <main className="relative min-h-screen w-full overflow-hidden bg-black flex items-center justify-center p-4">
+          {/* Animated Background Rays */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute inset-0 opacity-20">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute h-[200%] w-32 bg-gradient-to-r from-transparent via-[#f97316] to-transparent"
+                  style={{
+                    animation: `ray-flow ${8 + i * 2}s linear infinite`,
+                    animationDelay: `${i * 1.5}s`,
+                    top: "-50%",
+                    left: `${i * 20}%`,
+                    transform: 'rotate(20deg)',
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Radial Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-radial from-[#f97316]/10 via-transparent to-transparent opacity-50" />
+          </div>
+
+          {/* Skip Button */}
+          <button
+            onClick={handleSkipTrailer}
+            className="absolute top-6 right-6 z-20 text-white/70 hover:text-white transition-colors duration-200 text-sm font-medium"
+          >
+            Skip →
+          </button>
+
+          <div className="relative z-10 w-full max-w-md">
+            <div className="relative overflow-hidden rounded-3xl border border-[#fb923c]/30 bg-black/80 backdrop-blur-xl shadow-2xl shadow-[#f97316]/20">
+              {/* Slide Content */}
+              <div className="px-6 py-12">
+                <div
+                  key={currentSlide}
+                  className={cn(
+                    "space-y-6 text-center",
+                    direction === "right"
+                      ? "animate-[slide-in-right_0.6s_ease-out]"
+                      : "animate-[slide-in-left_0.6s_ease-out]",
+                  )}
+                >
+                  {/* Icon */}
+                  <div className="flex justify-center">
+                    <div className="relative">
+                      <div className="absolute inset-0 animate-[pulse-glow_2s_ease-in-out_infinite] rounded-full bg-[#f97316]/30 blur-2xl" />
+                      <div className="relative rounded-full bg-gradient-to-br from-[#f97316] to-[#ea580c] p-5">
+                        <Icon className="h-12 w-12 text-white" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Subtitle */}
+                  <div className="animate-[fade-in-up_0.6s_ease-out_0.1s_both]">
+                    <p className="text-xs font-medium uppercase tracking-wider text-[#f97316]">{current.subtitle}</p>
+                  </div>
+
+                  {/* Title */}
+                  <div className="animate-[fade-in-up_0.6s_ease-out_0.2s_both]">
+                    <h1 className="text-balance text-3xl font-bold leading-tight text-white">{current.title}</h1>
+                  </div>
+
+                  {/* Description */}
+                  <div className="animate-[fade-in-up_0.6s_ease-out_0.3s_both]">
+                    <p className="text-pretty text-sm text-white/80">{current.description}</p>
+                  </div>
+
+                  {/* Features */}
+                  <div className="animate-[fade-in-up_0.6s_ease-out_0.4s_both]">
+                    <div className="flex flex-col gap-2">
+                      {current.features.map((feature, index) => (
+                        <div
+                          key={index}
+                          className="group relative overflow-hidden rounded-full border border-[#fb923c]/30 bg-[#f97316]/10 px-4 py-2 backdrop-blur-sm transition-all hover:border-[#fb923c]/50 hover:bg-[#ea580c]/20"
+                        >
+                          <div className="absolute inset-0 translate-y-full bg-gradient-to-r from-[#f97316] to-[#ea580c] transition-transform group-hover:translate-y-0" />
+                          <span className="relative z-10 text-xs font-medium text-white/70 group-hover:text-white">
+                            {feature}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="animate-[fade-in-up_0.6s_ease-out_0.5s_both] pt-2">
+                    <Button
+                      onClick={handleExploreClick}
+                      size="lg"
+                      className="group relative w-full overflow-hidden bg-gradient-to-r from-[#f97316] to-[#ea580c] px-6 py-5 text-base font-semibold text-white shadow-lg shadow-[#f97316]/50 transition-all hover:shadow-xl hover:shadow-[#f97316]/60 active:bg-[#c2410c]"
+                    >
+                      <span className="relative z-10">Explore Prompts</span>
+                      <div className="absolute inset-0 translate-x-full bg-gradient-to-r from-[#ea580c] to-[#f97316] transition-transform group-hover:translate-x-0" />
+                      <Zap className="relative z-10 ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between border-t border-[#fb923c]/20 px-6 py-4">
+                <Button
+                  onClick={prevSlide}
+                  disabled={isAnimating}
+                  size="icon"
+                  variant="ghost"
+                  className="h-10 w-10 rounded-full transition-all hover:bg-[#ea580c]/20 disabled:opacity-50"
+                >
+                  <ChevronLeft className="h-5 w-5 text-[#f97316]" />
+                </Button>
+
+                {/* Slide Indicators */}
+                <div className="flex gap-2">
+                  {slides.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToSlide(index)}
+                      disabled={isAnimating}
+                      className={cn(
+                        "h-1.5 rounded-full transition-all duration-300 disabled:cursor-not-allowed",
+                        index === currentSlide
+                          ? "w-8 bg-gradient-to-r from-[#f97316] to-[#ea580c]"
+                          : "w-1.5 bg-white/30 hover:bg-white/50",
+                      )}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <Button
+                  onClick={nextSlide}
+                  disabled={isAnimating}
+                  size="icon"
+                  variant="ghost"
+                  className="h-10 w-10 rounded-full transition-all hover:bg-[#ea580c]/20 disabled:opacity-50"
+                >
+                  <ChevronRight className="h-5 w-5 text-[#f97316]" />
+                </Button>
+              </div>
+
+              <div className="absolute right-4 top-4">
+                <div className="rounded-full border border-[#fb923c]/30 bg-black/50 px-3 py-1 backdrop-blur-sm">
+                  <span className="text-xs font-medium text-[#f97316]">{String(currentSlide + 1).padStart(2, "0")}</span>
+                  <span className="text-xs text-white/70"> / </span>
+                  <span className="text-xs text-white/70">{String(slides.length).padStart(2, "0")}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Coming Soon Message Modal */}
+          {showMessage && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+              <div className="relative mx-4 w-full max-w-sm animate-in zoom-in-95 duration-300">
+                <div className="relative overflow-hidden rounded-2xl border border-[#fb923c]/40 bg-black/90 shadow-2xl shadow-[#f97316]/30">
+                  {/* Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#f97316]/20 via-transparent to-[#ea580c]/20" />
+
+                  <div className="relative p-8 text-center">
+                    <div className="mb-4 flex justify-center">
+                      <div className="rounded-full bg-gradient-to-br from-[#f97316] to-[#ea580c] p-4">
+                        <Sparkles className="h-8 w-8 text-white" />
+                      </div>
+                    </div>
+
+                    <h2 className="mb-2 text-2xl font-bold text-white">Coming Soon!</h2>
+                    <p className="text-sm text-white/80">
+                      Prompts will be available soon. Stay tuned for thousands of amazing AI prompts!
+                    </p>
+
+                    <div className="flex gap-2 mt-6">
+                      <Button
+                        onClick={() => {
+                          setShowMessage(false)
+                          setShowTrailer(false)
+                        }}
+                        className="flex-1 bg-gradient-to-r from-[#f97316] to-[#ea580c] hover:from-[#ea580c] hover:to-[#c2410c] text-white font-semibold"
+                      >
+                        Explore Website
+                      </Button>
+                      <Button
+                        onClick={() => setShowMessage(false)}
+                        variant="outline"
+                        className="flex-1 border-[#fb923c]/30 text-white hover:bg-[#f97316]/10"
+                      >
+                        Continue Trailer
+                      </Button>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setShowMessage(false)}
+                    className="absolute right-4 top-4 rounded-full p-1 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+
+        {/* Add custom styles for animations */}
+        <style jsx>{`
+          @keyframes ray-flow {
+            0% { transform: translateX(-200px) rotate(20deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100vw) rotate(20deg); opacity: 0; }
+          }
+          
+          @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+          }
+          
+          @keyframes slide-in-right {
+            0% { transform: translateX(100px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+          }
+          
+          @keyframes slide-in-left {
+            0% { transform: translateX(-100px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+          }
+          
+          @keyframes fade-in-up {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+          }
+        `}</style>
+      </>
+    )
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden">
