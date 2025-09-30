@@ -6,6 +6,7 @@ import { LineShadowText } from "@/components/line-shadow-text"
 import { ShimmerButton } from "@/components/shimmer-button"
 import { TermsOfServiceModal } from "@/components/terms-of-service-modal"
 import { PrivacyPolicyModal } from "@/components/privacy-policy-modal"
+import { DocsModal } from "@/components/docs-modal"
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
 
@@ -63,6 +64,9 @@ export default function HomePage() {
   const [showCelebration, setShowCelebration] = useState(false)
   const [showTermsModal, setShowTermsModal] = useState(false)
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
+  const [showDocsModal, setShowDocsModal] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [devicePixelRatio, setDevicePixelRatio] = useState(1)
 
   // Auto-hide celebration notification after 5 seconds
   useEffect(() => {
@@ -74,6 +78,20 @@ export default function HomePage() {
       return () => clearTimeout(timer)
     }
   }, [showCelebration])
+
+  // Detect mobile devices and pixel ratio for optimized animations
+  useEffect(() => {
+    const checkDevice = () => {
+      const mobile = window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      const pixelRatio = window.devicePixelRatio || 1
+      setIsMobile(mobile)
+      setDevicePixelRatio(pixelRatio)
+    }
+    
+    checkDevice()
+    window.addEventListener('resize', checkDevice)
+    return () => window.removeEventListener('resize', checkDevice)
+  }, [])
 
   // Auto-advance trailer slides
   useEffect(() => {
@@ -364,7 +382,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-black">
-        {/* Flowing wave rays overlay - reduced complexity on mobile */}
+        {/* Flowing wave rays overlay - optimized for all devices */}
         <div className="absolute inset-0">
           <svg
             className="absolute inset-0 w-full h-full"
@@ -372,6 +390,12 @@ export default function HomePage() {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="xMidYMid slice"
+            style={{
+              willChange: 'transform',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+              perspective: '1000px',
+            }}
           >
             <defs>
               <radialGradient id="neonPulse1" cx="50%" cy="50%" r="50%">
@@ -392,43 +416,31 @@ export default function HomePage() {
                 <stop offset="75%" stopColor="rgba(234,88,12,0.6)" />
                 <stop offset="100%" stopColor="rgba(234,88,12,0)" />
               </radialGradient>
-              {/* Adding hero text background gradients and filters */}
+              {/* Optimized hero text background gradients */}
               <radialGradient id="heroTextBg" cx="30%" cy="50%" r="70%">
                 <stop offset="0%" stopColor="rgba(249,115,22,0.15)" />
                 <stop offset="40%" stopColor="rgba(251,146,60,0.08)" />
                 <stop offset="80%" stopColor="rgba(234,88,12,0.05)" />
                 <stop offset="100%" stopColor="rgba(0,0,0,0)" />
               </radialGradient>
+              {/* Simplified filters for better performance */}
               <filter id="heroTextBlur" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="12" result="blur" />
-                <feTurbulence baseFrequency="0.7" numOctaves="4" result="noise" />
-                <feColorMatrix in="noise" type="saturate" values="0" result="monoNoise" />
-                <feComponentTransfer in="monoNoise" result="alphaAdjustedNoise">
-                  <feFuncA type="discrete" tableValues="0.03 0.06 0.09 0.12" />
-                </feComponentTransfer>
-                <feComposite in="blur" in2="alphaAdjustedNoise" operator="multiply" result="noisyBlur" />
+                <feGaussianBlur stdDeviation={isMobile ? "6" : "12"} result="blur" />
+                {!isMobile && (
+                  <>
+                    <feTurbulence baseFrequency="0.7" numOctaves="2" result="noise" />
+                    <feColorMatrix in="noise" type="saturate" values="0" result="monoNoise" />
+                    <feComponentTransfer in="monoNoise" result="alphaAdjustedNoise">
+                      <feFuncA type="discrete" tableValues="0.03 0.06 0.09 0.12" />
+                    </feComponentTransfer>
+                    <feComposite in="blur" in2="alphaAdjustedNoise" operator="multiply" result="noisyBlur" />
+                  </>
+                )}
                 <feMerge>
-                  <feMergeNode in="noisyBlur" />
+                  <feMergeNode in={isMobile ? "blur" : "noisyBlur"} />
                 </feMerge>
               </filter>
-              <linearGradient id="backgroundFade1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(0,0,0,0)" />
-                <stop offset="20%" stopColor="rgba(249,115,22,0.15)" />
-                <stop offset="80%" stopColor="rgba(249,115,22,0.15)" />
-                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-              </linearGradient>
-              <linearGradient id="backgroundFade2" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(0,0,0,0)" />
-                <stop offset="15%" stopColor="rgba(251,146,60,0.12)" />
-                <stop offset="85%" stopColor="rgba(251,146,60,0.12)" />
-                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-              </linearGradient>
-              <linearGradient id="backgroundFade3" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(0,0,0,0)" />
-                <stop offset="25%" stopColor="rgba(234,88,12,0.18)" />
-                <stop offset="75%" stopColor="rgba(234,88,12,0.18)" />
-                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-              </linearGradient>
+              {/* Optimized thread gradients */}
               <linearGradient id="threadFade1" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="rgba(0,0,0,1)" />
                 <stop offset="15%" stopColor="rgba(249,115,22,0.8)" />
@@ -447,20 +459,9 @@ export default function HomePage() {
                 <stop offset="82%" stopColor="rgba(234,88,12,0.8)" />
                 <stop offset="100%" stopColor="rgba(0,0,0,1)" />
               </linearGradient>
-              <filter id="backgroundBlur" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="8" result="blur" />
-                <feTurbulence baseFrequency="0.9" numOctaves="3" result="noise" />
-                <feColorMatrix in="noise" type="saturate" values="0" result="monoNoise" />
-                <feComponentTransfer in="monoNoise" result="alphaAdjustedNoise">
-                  <feFuncA type="discrete" tableValues="0.05 0.1 0.15 0.2" />
-                </feComponentTransfer>
-                <feComposite in="blur" in2="alphaAdjustedNoise" operator="multiply" result="noisyBlur" />
-                <feMerge>
-                  <feMergeNode in="noisyBlur" />
-                </feMerge>
-              </filter>
+              {/* High-performance neon glow filter */}
               <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                <feGaussianBlur stdDeviation={isMobile ? "1" : "2"} result="coloredBlur" />
                 <feMerge>
                   <feMergeNode in="coloredBlur" />
                   <feMergeNode in="SourceGraphic" />
@@ -468,8 +469,8 @@ export default function HomePage() {
               </filter>
             </defs>
 
-            <g>
-              {/* Adding hero text background shape */}
+            <g style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+              {/* Optimized hero text background shape */}
               <ellipse
                 cx="300"
                 cy="350"
@@ -479,26 +480,30 @@ export default function HomePage() {
                 filter="url(#heroTextBlur)"
                 opacity="0.6"
               />
-              <ellipse
-                cx="350"
-                cy="320"
-                rx="500"
-                ry="250"
-                fill="url(#heroTextBg)"
-                filter="url(#heroTextBlur)"
-                opacity="0.4"
-              />
-              <ellipse
-                cx="400"
-                cy="300"
-                rx="600"
-                ry="300"
-                fill="url(#heroTextBg)"
-                filter="url(#heroTextBlur)"
-                opacity="0.2"
-              />
+              {!isMobile && (
+                <>
+                  <ellipse
+                    cx="350"
+                    cy="320"
+                    rx="500"
+                    ry="250"
+                    fill="url(#heroTextBg)"
+                    filter="url(#heroTextBlur)"
+                    opacity="0.4"
+                  />
+                  <ellipse
+                    cx="400"
+                    cy="300"
+                    rx="600"
+                    ry="300"
+                    fill="url(#heroTextBg)"
+                    filter="url(#heroTextBlur)"
+                    opacity="0.2"
+                  />
+                </>
+              )}
 
-              {/* Thread 1 - Smooth S-curve from bottom-left to right */}
+              {/* Optimized Thread 1 - Hardware accelerated */}
               <path
                 id="thread1"
                 d="M50 720 Q200 590 350 540 Q500 490 650 520 Q800 550 950 460 Q1100 370 1200 340"
@@ -506,14 +511,31 @@ export default function HomePage() {
                 strokeWidth="0.8"
                 fill="none"
                 opacity="0.8"
+                style={{ 
+                  willChange: 'auto',
+                  vectorEffect: 'non-scaling-stroke',
+                }}
               />
-              <circle r="2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4s" repeatCount="indefinite">
+              <circle 
+                r="2" 
+                fill="url(#neonPulse1)" 
+                opacity="1" 
+                filter="url(#neonGlow)"
+                style={{
+                  willChange: 'transform',
+                  transform: 'translateZ(0)',
+                }}
+              >
+                <animateMotion 
+                  dur={isMobile ? "5s" : "4s"} 
+                  repeatCount="indefinite"
+                  calcMode="linear"
+                >
                   <mpath href="#thread1" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 2 - Gentle wave flow */}
+              {/* Optimized Thread 2 - Hardware accelerated */}
               <path
                 id="thread2"
                 d="M80 730 Q250 620 400 570 Q550 520 700 550 Q850 580 1000 490 Q1150 400 1300 370"
@@ -521,14 +543,31 @@ export default function HomePage() {
                 strokeWidth="1.5"
                 fill="none"
                 opacity="0.7"
+                style={{ 
+                  willChange: 'auto',
+                  vectorEffect: 'non-scaling-stroke',
+                }}
               />
-              <circle r="3" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5s" repeatCount="indefinite">
+              <circle 
+                r="3" 
+                fill="url(#neonPulse2)" 
+                opacity="1" 
+                filter="url(#neonGlow)"
+                style={{
+                  willChange: 'transform',
+                  transform: 'translateZ(0)',
+                }}
+              >
+                <animateMotion 
+                  dur={isMobile ? "6s" : "5s"} 
+                  repeatCount="indefinite"
+                  calcMode="linear"
+                >
                   <mpath href="#thread2" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 3 - Organic curve */}
+              {/* Optimized Thread 3 - Hardware accelerated */}
               <path
                 id="thread3"
                 d="M20 710 Q180 580 320 530 Q460 480 600 510 Q740 540 880 450 Q1020 360 1200 330"
@@ -536,14 +575,31 @@ export default function HomePage() {
                 strokeWidth="1.2"
                 fill="none"
                 opacity="0.8"
+                style={{ 
+                  willChange: 'auto',
+                  vectorEffect: 'non-scaling-stroke',
+                }}
               />
-              <circle r="2.5" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.5s" repeatCount="indefinite">
+              <circle 
+                r="2.5" 
+                fill="url(#neonPulse1)" 
+                opacity="1" 
+                filter="url(#neonGlow)"
+                style={{
+                  willChange: 'transform',
+                  transform: 'translateZ(0)',
+                }}
+              >
+                <animateMotion 
+                  dur={isMobile ? "5.5s" : "4.5s"} 
+                  repeatCount="indefinite"
+                  calcMode="linear"
+                >
                   <mpath href="#thread3" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 4 - Flowing curve */}
+              {/* Optimized Thread 4 - Hardware accelerated */}
               <path
                 id="thread4"
                 d="M120 740 Q280 640 450 590 Q620 540 770 570 Q920 600 1070 510 Q1220 420 1350 390"
@@ -551,14 +607,31 @@ export default function HomePage() {
                 strokeWidth="0.6"
                 fill="none"
                 opacity="0.6"
+                style={{ 
+                  willChange: 'auto',
+                  vectorEffect: 'non-scaling-stroke',
+                }}
               />
-              <circle r="1.5" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.5s" repeatCount="indefinite">
+              <circle 
+                r="1.5" 
+                fill="url(#neonPulse3)" 
+                opacity="1" 
+                filter="url(#neonGlow)"
+                style={{
+                  willChange: 'transform',
+                  transform: 'translateZ(0)',
+                }}
+              >
+                <animateMotion 
+                  dur={isMobile ? "6.5s" : "5.5s"} 
+                  repeatCount="indefinite"
+                  calcMode="linear"
+                >
                   <mpath href="#thread4" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 5 - Natural wave */}
+              {/* Optimized Thread 5 - Hardware accelerated */}
               <path
                 id="thread5"
                 d="M60 725 Q220 600 380 550 Q540 500 680 530 Q820 560 960 470 Q1100 380 1280 350"
@@ -566,14 +639,31 @@ export default function HomePage() {
                 strokeWidth="1.0"
                 fill="none"
                 opacity="0.7"
+                style={{ 
+                  willChange: 'auto',
+                  vectorEffect: 'non-scaling-stroke',
+                }}
               />
-              <circle r="2.2" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.2s" repeatCount="indefinite">
+              <circle 
+                r="2.2" 
+                fill="url(#neonPulse2)" 
+                opacity="1" 
+                filter="url(#neonGlow)"
+                style={{
+                  willChange: 'transform',
+                  transform: 'translateZ(0)',
+                }}
+              >
+                <animateMotion 
+                  dur={isMobile ? "5.2s" : "4.2s"} 
+                  repeatCount="indefinite"
+                  calcMode="linear"
+                >
                   <mpath href="#thread5" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 6 - Smooth flow */}
+              {/* Optimized Thread 6 through 16 - All hardware accelerated */}
               <path
                 id="thread6"
                 d="M150 735 Q300 660 480 610 Q660 560 800 590 Q940 620 1080 530 Q1220 440 1400 410"
@@ -581,14 +671,14 @@ export default function HomePage() {
                 strokeWidth="1.3"
                 fill="none"
                 opacity="0.6"
+                style={{ willChange: 'auto', vectorEffect: 'non-scaling-stroke' }}
               />
-              <circle r="2.8" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.2s" repeatCount="indefinite">
+              <circle r="2.8" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+                <animateMotion dur={isMobile ? "6.2s" : "5.2s"} repeatCount="indefinite" calcMode="linear">
                   <mpath href="#thread6" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 7 - Organic S-curve */}
               <path
                 id="thread7"
                 d="M40 715 Q190 585 340 535 Q490 485 630 515 Q770 545 910 455 Q1050 365 1250 335"
@@ -596,14 +686,14 @@ export default function HomePage() {
                 strokeWidth="0.9"
                 fill="none"
                 opacity="0.8"
+                style={{ willChange: 'auto', vectorEffect: 'non-scaling-stroke' }}
               />
-              <circle r="2" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.8s" repeatCount="indefinite">
+              <circle r="2" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+                <animateMotion dur={isMobile ? "5.8s" : "4.8s"} repeatCount="indefinite" calcMode="linear">
                   <mpath href="#thread7" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 8 - Gentle wave */}
               <path
                 id="thread8"
                 d="M100 728 Q260 630 420 580 Q580 530 720 560 Q860 590 1000 500 Q1140 410 1320 380"
@@ -611,14 +701,14 @@ export default function HomePage() {
                 strokeWidth="1.4"
                 fill="none"
                 opacity="0.7"
+                style={{ willChange: 'auto', vectorEffect: 'non-scaling-stroke' }}
               />
-              <circle r="3" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.8s" repeatCount="indefinite">
+              <circle r="3" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+                <animateMotion dur={isMobile ? "6.8s" : "5.8s"} repeatCount="indefinite" calcMode="linear">
                   <mpath href="#thread8" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 9 - Thin flowing curve */}
               <path
                 id="thread9"
                 d="M30 722 Q170 595 310 545 Q450 495 590 525 Q730 555 870 465 Q1010 375 1180 345"
@@ -626,14 +716,14 @@ export default function HomePage() {
                 strokeWidth="0.5"
                 fill="none"
                 opacity="0.6"
+                style={{ willChange: 'auto', vectorEffect: 'non-scaling-stroke' }}
               />
-              <circle r="1.2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="6s" repeatCount="indefinite">
+              <circle r="1.2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+                <animateMotion dur={isMobile ? "7s" : "6s"} repeatCount="indefinite" calcMode="linear">
                   <mpath href="#thread9" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 10 - Medium thick wave */}
               <path
                 id="thread10"
                 d="M90 732 Q240 625 390 575 Q540 525 680 555 Q820 585 960 495 Q1100 405 1300 375"
@@ -641,9 +731,10 @@ export default function HomePage() {
                 strokeWidth="1.1"
                 fill="none"
                 opacity="0.8"
+                style={{ willChange: 'auto', vectorEffect: 'non-scaling-stroke' }}
               />
-              <circle r="2.5" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.3s" repeatCount="indefinite">
+              <circle r="2.5" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+                <animateMotion dur={isMobile ? "5.3s" : "4.3s"} repeatCount="indefinite" calcMode="linear">
                   <mpath href="#thread10" />
                 </animateMotion>
               </circle>
@@ -657,8 +748,8 @@ export default function HomePage() {
                 fill="none"
                 opacity="0.5"
               />
-              <circle r="1" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.7s" repeatCount="indefinite">
+              <circle r="1" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+                <animateMotion dur={isMobile ? "6.7s" : "5.7s"} repeatCount="indefinite" calcMode="linear">
                   <mpath href="#thread11" />
                 </animateMotion>
               </circle>
@@ -671,9 +762,10 @@ export default function HomePage() {
                 strokeWidth="1.5"
                 fill="none"
                 opacity="0.7"
+                style={{ willChange: 'auto', vectorEffect: 'non-scaling-stroke' }}
               />
-              <circle r="3.2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.7s" repeatCount="indefinite">
+              <circle r="3.2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
+                <animateMotion dur={isMobile ? "5.7s" : "4.7s"} repeatCount="indefinite" calcMode="linear">
                   <mpath href="#thread12" />
                 </animateMotion>
               </circle>
@@ -1043,6 +1135,26 @@ export default function HomePage() {
       </div>
 
       <style jsx>{`
+        /* Hardware acceleration for all animated elements */
+        svg {
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          perspective: 1000px;
+          image-rendering: ${isMobile ? 'optimizeSpeed' : 'auto'};
+        }
+        
+        svg circle {
+          transform: translateZ(0);
+          will-change: transform;
+        }
+        
+        svg path {
+          transform: translateZ(0);
+          will-change: auto;
+          vector-effect: non-scaling-stroke;
+        }
+
+        /* Optimized animations */
         @keyframes flow {
           0%, 100% {
             opacity: 0.3;
@@ -1057,16 +1169,61 @@ export default function HomePage() {
         }
 
         @keyframes pulse1 {
-          0%, 100% { opacity: 0.4; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1.2); }
+          0%, 100% { 
+            opacity: 0.4; 
+            transform: scale3d(0.8, 0.8, 1) translateZ(0); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: scale3d(1.2, 1.2, 1) translateZ(0); 
+          }
         }
         @keyframes pulse2 {
-          0%, 100% { opacity: 0.3; transform: scale(0.9); }
-          50% { opacity: 1; transform: scale(1.1); }
+          0%, 100% { 
+            opacity: 0.3; 
+            transform: scale3d(0.9, 0.9, 1) translateZ(0); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: scale3d(1.1, 1.1, 1) translateZ(0); 
+          }
         }
         @keyframes pulse3 {
-          0%, 100% { opacity: 0.5; transform: scale(0.7); }
-          50% { opacity: 1; transform: scale(1.3); }
+          0%, 100% { 
+            opacity: 0.5; 
+            transform: scale3d(0.7, 0.7, 1) translateZ(0); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: scale3d(1.3, 1.3, 1) translateZ(0); 
+          }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+          svg {
+            transform: translateZ(0) scale(1);
+            image-rendering: optimizeSpeed;
+          }
+          
+          svg circle {
+            animation-duration: 1.5s !important;
+          }
+        }
+
+        /* High refresh rate display optimizations */
+        @media (min-resolution: 120dpi) {
+          svg circle {
+            animation-timing-function: linear;
+          }
+        }
+
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+          svg circle {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+          }
         }
       `}</style>
 
@@ -1203,6 +1360,15 @@ export default function HomePage() {
           <button
             type="button"
             onClick={() => {
+              setShowDocsModal(true);
+            }}
+            className="text-xs text-white/70 hover:text-white transition-colors duration-200 hover:underline cursor-pointer"
+          >
+            About QWERY
+          </button>
+          <button
+            type="button"
+            onClick={() => {
               setShowPrivacyModal(true);
             }}
             className="text-xs text-white/70 hover:text-white transition-colors duration-200 hover:underline cursor-pointer"
@@ -1257,6 +1423,12 @@ export default function HomePage() {
       <PrivacyPolicyModal 
         isOpen={showPrivacyModal} 
         onClose={() => setShowPrivacyModal(false)} 
+      />
+
+      {/* Docs Modal */}
+      <DocsModal 
+        isOpen={showDocsModal} 
+        onClose={() => setShowDocsModal(false)} 
       />
 
       {/* Celebration Notification */}
