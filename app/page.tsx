@@ -63,6 +63,27 @@ export default function HomePage() {
   const [showCelebration, setShowCelebration] = useState(false)
   const [showTermsModal, setShowTermsModal] = useState(false)
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
+  const [showDocsModal, setShowDocsModal] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState(false)
+
+  // Detect mobile and performance preferences
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    const checkReduceMotion = () => {
+      setReduceMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    }
+    
+    checkMobile()
+    checkReduceMotion()
+    
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Auto-hide celebration notification after 5 seconds
   useEffect(() => {
@@ -364,7 +385,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-black">
-        {/* Flowing wave rays overlay - reduced complexity on mobile */}
+        {/* Flowing wave rays overlay - optimized for mobile performance */}
         <div className="absolute inset-0">
           <svg
             className="absolute inset-0 w-full h-full"
@@ -372,6 +393,10 @@ export default function HomePage() {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="xMidYMid slice"
+            style={{ 
+              willChange: 'transform',
+              transform: 'translateZ(0)',
+            }}
           >
             <defs>
               <radialGradient id="neonPulse1" cx="50%" cy="50%" r="50%">
@@ -411,56 +436,26 @@ export default function HomePage() {
                   <feMergeNode in="noisyBlur" />
                 </feMerge>
               </filter>
-              <linearGradient id="backgroundFade1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(0,0,0,0)" />
-                <stop offset="20%" stopColor="rgba(249,115,22,0.15)" />
-                <stop offset="80%" stopColor="rgba(249,115,22,0.15)" />
-                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-              </linearGradient>
-              <linearGradient id="backgroundFade2" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(0,0,0,0)" />
-                <stop offset="15%" stopColor="rgba(251,146,60,0.12)" />
-                <stop offset="85%" stopColor="rgba(251,146,60,0.12)" />
-                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-              </linearGradient>
-              <linearGradient id="backgroundFade3" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(0,0,0,0)" />
-                <stop offset="25%" stopColor="rgba(234,88,12,0.18)" />
-                <stop offset="75%" stopColor="rgba(234,88,12,0.18)" />
-                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-              </linearGradient>
               <linearGradient id="threadFade1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(0,0,0,1)" />
+                <stop offset="0%" stopColor="rgba(0,0,0,0)" />
                 <stop offset="15%" stopColor="rgba(249,115,22,0.8)" />
                 <stop offset="85%" stopColor="rgba(249,115,22,0.8)" />
-                <stop offset="100%" stopColor="rgba(0,0,0,1)" />
+                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
               </linearGradient>
               <linearGradient id="threadFade2" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(0,0,0,1)" />
+                <stop offset="0%" stopColor="rgba(0,0,0,0)" />
                 <stop offset="12%" stopColor="rgba(251,146,60,0.7)" />
                 <stop offset="88%" stopColor="rgba(251,146,60,0.7)" />
-                <stop offset="100%" stopColor="rgba(0,0,0,1)" />
+                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
               </linearGradient>
               <linearGradient id="threadFade3" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(0,0,0,1)" />
+                <stop offset="0%" stopColor="rgba(0,0,0,0)" />
                 <stop offset="18%" stopColor="rgba(234,88,12,0.8)" />
                 <stop offset="82%" stopColor="rgba(234,88,12,0.8)" />
-                <stop offset="100%" stopColor="rgba(0,0,0,1)" />
+                <stop offset="100%" stopColor="rgba(0,0,0,0)" />
               </linearGradient>
-              <filter id="backgroundBlur" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="8" result="blur" />
-                <feTurbulence baseFrequency="0.9" numOctaves="3" result="noise" />
-                <feColorMatrix in="noise" type="saturate" values="0" result="monoNoise" />
-                <feComponentTransfer in="monoNoise" result="alphaAdjustedNoise">
-                  <feFuncA type="discrete" tableValues="0.05 0.1 0.15 0.2" />
-                </feComponentTransfer>
-                <feComposite in="blur" in2="alphaAdjustedNoise" operator="multiply" result="noisyBlur" />
-                <feMerge>
-                  <feMergeNode in="noisyBlur" />
-                </feMerge>
-              </filter>
               <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
                 <feMerge>
                   <feMergeNode in="coloredBlur" />
                   <feMergeNode in="SourceGraphic" />
@@ -498,551 +493,195 @@ export default function HomePage() {
                 opacity="0.2"
               />
 
-              {/* Thread 1 - Smooth S-curve from bottom-left to right */}
+              {/* Mobile optimized threads - fewer but smoother */}
+              {/* Primary thread 1 */}
               <path
                 id="thread1"
-                d="M50 720 Q200 590 350 540 Q500 490 650 520 Q800 550 950 460 Q1100 370 1200 340"
+                d="M50 720 Q300 550 650 520 Q900 480 1200 340"
                 stroke="url(#threadFade1)"
-                strokeWidth="0.8"
+                strokeWidth="1.2"
                 fill="none"
-                opacity="0.8"
+                opacity="0.9"
+                style={{ willChange: 'opacity' }}
               />
-              <circle r="2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4s" repeatCount="indefinite">
+              <circle r="3" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
+                <animateMotion dur="6s" repeatCount="indefinite" begin="0s">
                   <mpath href="#thread1" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 2 - Gentle wave flow */}
+              {/* Primary thread 2 */}
               <path
                 id="thread2"
-                d="M80 730 Q250 620 400 570 Q550 520 700 550 Q850 580 1000 490 Q1150 400 1300 370"
+                d="M80 750 Q400 600 700 570 Q1000 520 1300 380"
                 stroke="url(#threadFade2)"
-                strokeWidth="1.5"
+                strokeWidth="1.0"
                 fill="none"
-                opacity="0.7"
+                opacity="0.8"
+                style={{ willChange: 'opacity' }}
               />
-              <circle r="3" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5s" repeatCount="indefinite">
+              <circle r="2.5" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
+                <animateMotion dur="7s" repeatCount="indefinite" begin="1s">
                   <mpath href="#thread2" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 3 - Organic curve */}
+              {/* Primary thread 3 */}
               <path
                 id="thread3"
-                d="M20 710 Q180 580 320 530 Q460 480 600 510 Q740 540 880 450 Q1020 360 1200 330"
+                d="M20 700 Q350 530 600 510 Q850 490 1200 320"
                 stroke="url(#threadFade3)"
-                strokeWidth="1.2"
+                strokeWidth="1.5"
                 fill="none"
-                opacity="0.8"
+                opacity="0.85"
+                style={{ willChange: 'opacity' }}
               />
-              <circle r="2.5" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.5s" repeatCount="indefinite">
+              <circle r="3.5" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
+                <animateMotion dur="5.5s" repeatCount="indefinite" begin="2s">
                   <mpath href="#thread3" />
                 </animateMotion>
               </circle>
 
-              {/* Thread 4 - Flowing curve */}
-              <path
-                id="thread4"
-                d="M120 740 Q280 640 450 590 Q620 540 770 570 Q920 600 1070 510 Q1220 420 1350 390"
-                stroke="url(#threadFade1)"
-                strokeWidth="0.6"
-                fill="none"
-                opacity="0.6"
-              />
-              <circle r="1.5" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.5s" repeatCount="indefinite">
-                  <mpath href="#thread4" />
-                </animateMotion>
-              </circle>
+              {/* Secondary threads - hidden on mobile for better performance */}
+              <g className="hidden sm:block">
+                {/* Thread 4 */}
+                <path
+                  id="thread4"
+                  d="M120 740 Q450 590 770 570 Q1070 530 1350 390"
+                  stroke="url(#threadFade1)"
+                  strokeWidth="0.8"
+                  fill="none"
+                  opacity="0.7"
+                />
+                <circle r="2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
+                  <animateMotion dur="6.5s" repeatCount="indefinite" begin="0.5s">
+                    <mpath href="#thread4" />
+                  </animateMotion>
+                </circle>
 
-              {/* Thread 5 - Natural wave */}
-              <path
-                id="thread5"
-                d="M60 725 Q220 600 380 550 Q540 500 680 530 Q820 560 960 470 Q1100 380 1280 350"
-                stroke="url(#threadFade2)"
-                strokeWidth="1.0"
-                fill="none"
-                opacity="0.7"
-              />
-              <circle r="2.2" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.2s" repeatCount="indefinite">
-                  <mpath href="#thread5" />
-                </animateMotion>
-              </circle>
+                {/* Thread 5 */}
+                <path
+                  id="thread5"
+                  d="M60 725 Q380 550 680 530 Q980 490 1280 350"
+                  stroke="url(#threadFade2)"
+                  strokeWidth="1.2"
+                  fill="none"
+                  opacity="0.75"
+                />
+                <circle r="2.8" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
+                  <animateMotion dur="5.8s" repeatCount="indefinite" begin="1.5s">
+                    <mpath href="#thread5" />
+                  </animateMotion>
+                </circle>
 
-              {/* Thread 6 - Smooth flow */}
-              <path
-                id="thread6"
-                d="M150 735 Q300 660 480 610 Q660 560 800 590 Q940 620 1080 530 Q1220 440 1400 410"
-                stroke="url(#threadFade3)"
-                strokeWidth="1.3"
-                fill="none"
-                opacity="0.6"
-              />
-              <circle r="2.8" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.2s" repeatCount="indefinite">
-                  <mpath href="#thread6" />
-                </animateMotion>
-              </circle>
+                {/* Thread 6 */}
+                <path
+                  id="thread6"
+                  d="M150 735 Q480 610 800 590 Q1080 560 1400 410"
+                  stroke="url(#threadFade3)"
+                  strokeWidth="0.9"
+                  fill="none"
+                  opacity="0.6"
+                />
+                <circle r="2.2" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
+                  <animateMotion dur="7.2s" repeatCount="indefinite" begin="2.5s">
+                    <mpath href="#thread6" />
+                  </animateMotion>
+                </circle>
+              </g>
 
-              {/* Thread 7 - Organic S-curve */}
-              <path
-                id="thread7"
-                d="M40 715 Q190 585 340 535 Q490 485 630 515 Q770 545 910 455 Q1050 365 1250 335"
-                stroke="url(#threadFade1)"
-                strokeWidth="0.9"
-                fill="none"
-                opacity="0.8"
-              />
-              <circle r="2" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.8s" repeatCount="indefinite">
-                  <mpath href="#thread7" />
-                </animateMotion>
-              </circle>
+              {/* Desktop additional threads */}
+              <g className="hidden lg:block">
+                {/* Thread 7 */}
+                <path
+                  id="thread7"
+                  d="M40 715 Q340 535 630 515 Q910 475 1250 335"
+                  stroke="url(#threadFade1)"
+                  strokeWidth="1.1"
+                  fill="none"
+                  opacity="0.8"
+                />
+                <circle r="2.6" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
+                  <animateMotion dur="6.8s" repeatCount="indefinite" begin="3s">
+                    <mpath href="#thread7" />
+                  </animateMotion>
+                </circle>
 
-              {/* Thread 8 - Gentle wave */}
-              <path
-                id="thread8"
-                d="M100 728 Q260 630 420 580 Q580 530 720 560 Q860 590 1000 500 Q1140 410 1320 380"
-                stroke="url(#threadFade2)"
-                strokeWidth="1.4"
-                fill="none"
-                opacity="0.7"
-              />
-              <circle r="3" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.8s" repeatCount="indefinite">
-                  <mpath href="#thread8" />
-                </animateMotion>
-              </circle>
+                {/* Thread 8 */}
+                <path
+                  id="thread8"
+                  d="M100 728 Q420 580 720 560 Q1000 520 1320 380"
+                  stroke="url(#threadFade2)"
+                  strokeWidth="0.7"
+                  fill="none"
+                  opacity="0.65"
+                />
+                <circle r="1.8" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
+                  <animateMotion dur="5.3s" repeatCount="indefinite" begin="0.8s">
+                    <mpath href="#thread8" />
+                  </animateMotion>
+                </circle>
 
-              {/* Thread 9 - Thin flowing curve */}
-              <path
-                id="thread9"
-                d="M30 722 Q170 595 310 545 Q450 495 590 525 Q730 555 870 465 Q1010 375 1180 345"
-                stroke="url(#threadFade3)"
-                strokeWidth="0.5"
-                fill="none"
-                opacity="0.6"
-              />
-              <circle r="1.2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="6s" repeatCount="indefinite">
-                  <mpath href="#thread9" />
-                </animateMotion>
-              </circle>
+                {/* Thread 9 */}
+                <path
+                  id="thread9"
+                  d="M30 722 Q310 545 590 525 Q870 485 1180 345"
+                  stroke="url(#threadFade3)"
+                  strokeWidth="1.3"
+                  fill="none"
+                  opacity="0.75"
+                />
+                <circle r="3.2" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
+                  <animateMotion dur="6.2s" repeatCount="indefinite" begin="1.8s">
+                    <mpath href="#thread9" />
+                  </animateMotion>
+                </circle>
 
-              {/* Thread 10 - Medium thick wave */}
-              <path
-                id="thread10"
-                d="M90 732 Q240 625 390 575 Q540 525 680 555 Q820 585 960 495 Q1100 405 1300 375"
-                stroke="url(#threadFade1)"
-                strokeWidth="1.1"
-                fill="none"
-                opacity="0.8"
-              />
-              <circle r="2.5" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.3s" repeatCount="indefinite">
-                  <mpath href="#thread10" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 11 - Very thin thread */}
-              <path
-                id="thread11"
-                d="M70 727 Q210 605 360 555 Q510 505 650 535 Q790 565 930 475 Q1070 385 1260 355"
-                stroke="url(#threadFade2)"
-                strokeWidth="0.4"
-                fill="none"
-                opacity="0.5"
-              />
-              <circle r="1" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.7s" repeatCount="indefinite">
-                  <mpath href="#thread11" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 12 - Thick flowing line */}
-              <path
-                id="thread12"
-                d="M110 738 Q270 645 430 595 Q590 545 730 575 Q870 605 1010 515 Q1150 425 1380 395"
-                stroke="url(#threadFade3)"
-                strokeWidth="1.5"
-                fill="none"
-                opacity="0.7"
-              />
-              <circle r="3.2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.7s" repeatCount="indefinite">
-                  <mpath href="#thread12" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 13 - Thin organic curve */}
-              <path
-                id="thread13"
-                d="M45 718 Q185 588 325 538 Q465 488 605 518 Q745 548 885 458 Q1025 368 1220 338"
-                stroke="url(#threadFade1)"
-                strokeWidth="0.7"
-                fill="none"
-                opacity="0.6"
-              />
-              <circle r="1.8" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.3s" repeatCount="indefinite">
-                  <mpath href="#thread13" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 14 - Medium wave */}
-              <path
-                id="thread14"
-                d="M130 721 Q290 630 460 580 Q630 530 770 560 Q910 590 1050 500 Q1190 410 1350 380"
-                stroke="url(#threadFade2)"
-                strokeWidth="1.0"
-                fill="none"
-                opacity="0.8"
-              />
-              <circle r="2.3" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.9s" repeatCount="indefinite">
-                  <mpath href="#thread14" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 15 - Very thin delicate line */}
-              <path
-                id="thread15"
-                d="M25 713 Q165 583 305 533 Q445 483 585 513 Q725 543 865 453 Q1005 363 1200 333"
-                stroke="url(#threadFade3)"
-                strokeWidth="0.3"
-                fill="none"
-                opacity="0.4"
-              />
-              <circle r="0.8" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="6.2s" repeatCount="indefinite">
-                  <mpath href="#thread15" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 16 - Thick prominent thread */}
-              <path
-                id="thread16"
-                d="M85 719 Q235 605 385 555 Q535 505 675 535 Q815 565 955 475 Q1095 385 1320 355"
-                stroke="url(#threadFade1)"
-                strokeWidth="1.5"
-                fill="none"
-                opacity="0.9"
-              />
-              <circle r="3.2" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.1s" repeatCount="indefinite">
-                  <mpath href="#thread16" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 17 */}
-              <path
-                id="thread17"
-                d="M50 720 Q180 660 320 620 Q460 580 600 600 Q740 620 880 560 Q1020 500 1200 340"
-                stroke="url(#threadFade2)"
-                strokeWidth="0.6"
-                fill="none"
-                opacity="0.5"
-              />
-              <circle r="1.5" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.1s" repeatCount="indefinite">
-                  <mpath href="#thread17" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 18 */}
-              <path
-                id="thread18"
-                d="M50 720 Q200 680 350 640 Q500 600 650 620 Q800 640 950 580 Q1100 520 1200 340"
-                stroke="url(#threadFade3)"
-                strokeWidth="1.2"
-                fill="none"
-                opacity="0.7"
-              />
-              <circle r="2.8" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.6s" repeatCount="indefinite">
-                  <mpath href="#thread18" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 19 */}
-              <path
-                id="thread19"
-                d="M50 720 Q160 670 280 630 Q400 590 540 610 Q680 630 820 570 Q960 510 1200 340"
-                stroke="url(#threadFade1)"
-                strokeWidth="0.8"
-                fill="none"
-                opacity="0.6"
-              />
-              <circle r="2" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.4s" repeatCount="indefinite">
-                  <mpath href="#thread19" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 20 */}
-              <path
-                id="thread20"
-                d="M50 720 Q220 690 380 650 Q540 610 680 630 Q820 650 960 590 Q1100 530 1200 340"
-                stroke="url(#threadFade2)"
-                strokeWidth="1.4"
-                fill="none"
-                opacity="0.8"
-              />
-              <circle r="3" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.4s" repeatCount="indefinite">
-                  <mpath href="#thread20" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 21 */}
-              <path
-                id="thread21"
-                d="M50 720 Q170 675 300 635 Q430 595 570 615 Q710 635 850 575 Q990 515 1200 340"
-                stroke="url(#threadFade3)"
-                strokeWidth="0.5"
-                fill="none"
-                opacity="0.4"
-              />
-              <circle r="1.2" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.9s" repeatCount="indefinite">
-                  <mpath href="#thread21" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 22 */}
-              <path
-                id="thread22"
-                d="M50 720 Q190 745 340 705 Q490 665 630 685 Q770 705 910 645 Q1050 585 1200 340"
-                stroke="url(#threadFade1)"
-                strokeWidth="1.1"
-                fill="none"
-                opacity="0.7"
-              />
-              <circle r="2.5" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.8s" repeatCount="indefinite">
-                  <mpath href="#thread22" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 23 */}
-              <path
-                id="thread23"
-                d="M50 720 Q150 725 270 685 Q390 645 530 665 Q670 685 810 625 Q950 565 1200 340"
-                stroke="url(#threadFade2)"
-                strokeWidth="0.9"
-                fill="none"
-                opacity="0.6"
-              />
-              <circle r="2.2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.2s" repeatCount="indefinite">
-                  <mpath href="#thread23" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 24 */}
-              <path
-                id="thread24"
-                d="M50 720 Q210 755 370 715 Q530 675 670 695 Q810 715 950 655 Q1090 595 1200 340"
-                stroke="url(#threadFade3)"
-                strokeWidth="1.3"
-                fill="none"
-                opacity="0.8"
-              />
-              <circle r="2.9" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.2s" repeatCount="indefinite">
-                  <mpath href="#thread24" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 25 */}
-              <path
-                id="thread25"
-                d="M50 720 Q165 730 290 690 Q415 650 555 670 Q695 690 835 630 Q975 570 1200 340"
-                stroke="url(#threadFade1)"
-                strokeWidth="0.7"
-                fill="none"
-                opacity="0.5"
-              />
-              <circle r="1.8" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.6s" repeatCount="indefinite">
-                  <mpath href="#thread25" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 26 */}
-              <path
-                id="thread26"
-                d="M50 720 Q230 760 390 720 Q550 680 690 700 Q830 720 970 660 Q1110 600 1200 340"
-                stroke="url(#threadFade2)"
-                strokeWidth="1.0"
-                fill="none"
-                opacity="0.7"
-              />
-              <circle r="2.4" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.7s" repeatCount="indefinite">
-                  <mpath href="#thread26" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 27 */}
-              <path
-                id="thread27"
-                d="M50 720 Q175 740 310 700 Q445 660 585 680 Q725 700 865 640 Q1005 580 1200 340"
-                stroke="url(#threadFade3)"
-                strokeWidth="0.4"
-                fill="none"
-                opacity="0.4"
-              />
-              <circle r="1" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="6.1s" repeatCount="indefinite">
-                  <mpath href="#thread27" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 28 */}
-              <path
-                id="thread28"
-                d="M50 720 Q195 750 350 710 Q505 670 645 690 Q785 710 925 650 Q1065 590 1200 340"
-                stroke="url(#threadFade1)"
-                strokeWidth="1.5"
-                fill="none"
-                opacity="0.9"
-              />
-              <circle r="3.1" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.3s" repeatCount="indefinite">
-                  <mpath href="#thread28" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 29 */}
-              <path
-                id="thread29"
-                d="M50 720 Q155 735 285 695 Q415 655 555 675 Q695 695 835 635 Q975 575 1200 340"
-                stroke="url(#threadFade2)"
-                strokeWidth="0.8"
-                fill="none"
-                opacity="0.6"
-              />
-              <circle r="2" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.3s" repeatCount="indefinite">
-                  <mpath href="#thread29" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 30 */}
-              <path
-                id="thread30"
-                d="M50 720 Q215 765 375 725 Q535 685 675 705 Q815 725 955 665 Q1095 605 1200 340"
-                stroke="url(#threadFade3)"
-                strokeWidth="1.2"
-                fill="none"
-                opacity="0.8"
-              />
-              <circle r="2.7" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.5s" repeatCount="indefinite">
-                  <mpath href="#thread30" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 31 */}
-              <path
-                id="thread31"
-                d="M50 720 Q185 745 325 705 Q465 665 605 685 Q745 705 885 645 Q1025 585 1200 340"
-                stroke="url(#threadFade1)"
-                strokeWidth="0.6"
-                fill="none"
-                opacity="0.5"
-              />
-              <circle r="1.5" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.8s" repeatCount="indefinite">
-                  <mpath href="#thread31" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 32 */}
-              <path
-                id="thread32"
-                d="M50 720 Q205 755 365 715 Q525 675 665 695 Q805 715 945 655 Q1085 595 1200 340"
-                stroke="url(#threadFade2)"
-                strokeWidth="1.4"
-                fill="none"
-                opacity="0.8"
-              />
-              <circle r="3" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.1s" repeatCount="indefinite">
-                  <mpath href="#thread32" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 33 */}
-              <path
-                id="thread33"
-                d="M50 720 Q160 730 295 690 Q430 650 570 670 Q710 690 850 630 Q990 570 1200 340"
-                stroke="url(#threadFade3)"
-                strokeWidth="0.9"
-                fill="none"
-                opacity="0.6"
-              />
-              <circle r="2.1" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="5.1s" repeatCount="indefinite">
-                  <mpath href="#thread33" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 34 */}
-              <path
-                id="thread34"
-                d="M50 720 Q225 770 385 730 Q545 690 685 710 Q825 730 965 670 Q1105 610 1200 340"
-                stroke="url(#threadFade1)"
-                strokeWidth="1.1"
-                fill="none"
-                opacity="0.7"
-              />
-              <circle r="2.6" fill="url(#neonPulse3)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.9s" repeatCount="indefinite">
-                  <mpath href="#thread34" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 35 */}
-              <path
-                id="thread35"
-                d="M50 720 Q170 740 305 700 Q440 660 580 680 Q720 700 860 640 Q1000 580 1200 340"
-                stroke="url(#threadFade2)"
-                strokeWidth="0.3"
-                fill="none"
-                opacity="0.4"
-              />
-              <circle r="0.8" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="6.3s" repeatCount="indefinite">
-                  <mpath href="#thread35" />
-                </animateMotion>
-              </circle>
-
-              {/* Thread 36 */}
-              <path
-                id="thread36"
-                d="M50 720 Q240 715 400 675 Q560 635 700 655 Q840 675 980 615 Q1120 555 1200 340"
-                stroke="url(#threadFade3)"
-                strokeWidth="1.5"
-                fill="none"
-                opacity="0.9"
-              />
-              <circle r="3.2" fill="url(#neonPulse2)" opacity="1" filter="url(#neonGlow)">
-                <animateMotion dur="4.0s" repeatCount="indefinite">
-                  <mpath href="#thread36" />
-                </animateMotion>
-              </circle>
+                {/* Thread 10 */}
+                <path
+                  id="thread10"
+                  d="M90 732 Q390 575 680 555 Q960 515 1300 375"
+                  stroke="url(#threadFade1)"
+                  strokeWidth="0.6"
+                  fill="none"
+                  opacity="0.55"
+                />
+                <circle r="1.5" fill="url(#neonPulse1)" opacity="1" filter="url(#neonGlow)">
+                  <animateMotion dur="7.5s" repeatCount="indefinite" begin="2.8s">
+                    <mpath href="#thread10" />
+                  </animateMotion>
+                </circle>
+              </g>
             </g>
           </svg>
         </div>
       </div>
 
       <style jsx>{`
+        /* Hardware accelerated animations for smooth performance */
+        svg {
+          transform: translateZ(0);
+          will-change: transform;
+        }
+        
+        circle {
+          transform: translateZ(0);
+          will-change: transform;
+        }
+
+        @media (max-width: 768px) {
+          /* Reduce animation complexity on mobile */
+          circle {
+            filter: none;
+          }
+          
+          /* Optimize SVG rendering on mobile */
+          svg {
+            image-rendering: optimizeSpeed;
+            shape-rendering: optimizeSpeed;
+          }
+        }
+
         @keyframes flow {
           0%, 100% {
             opacity: 0.3;
@@ -1056,17 +695,66 @@ export default function HomePage() {
           }
         }
 
+        /* Optimized pulse animations with transform3d for GPU acceleration */
         @keyframes pulse1 {
-          0%, 100% { opacity: 0.4; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1.2); }
+          0%, 100% { 
+            opacity: 0.4; 
+            transform: translate3d(0,0,0) scale3d(0.8,0.8,1); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: translate3d(0,0,0) scale3d(1.2,1.2,1); 
+          }
         }
         @keyframes pulse2 {
-          0%, 100% { opacity: 0.3; transform: scale(0.9); }
-          50% { opacity: 1; transform: scale(1.1); }
+          0%, 100% { 
+            opacity: 0.3; 
+            transform: translate3d(0,0,0) scale3d(0.9,0.9,1); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: translate3d(0,0,0) scale3d(1.1,1.1,1); 
+          }
         }
         @keyframes pulse3 {
-          0%, 100% { opacity: 0.5; transform: scale(0.7); }
-          50% { opacity: 1; transform: scale(1.3); }
+          0%, 100% { 
+            opacity: 0.5; 
+            transform: translate3d(0,0,0) scale3d(0.7,0.7,1); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: translate3d(0,0,0) scale3d(1.3,1.3,1); 
+          }
+        }
+
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+          circle {
+            animation: none !important;
+          }
+          
+          animateMotion {
+            animation: none !important;
+          }
+        }
+
+        /* Custom scrollbar for docs modal */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(249, 115, 22, 0.5);
+          border-radius: 4px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(249, 115, 22, 0.7);
         }
       `}</style>
 
@@ -1218,6 +906,15 @@ export default function HomePage() {
           >
             Terms of Service
           </button>
+          <button
+            type="button"
+            onClick={() => {
+              setShowDocsModal(true);
+            }}
+            className="text-xs text-white/70 hover:text-white transition-colors duration-200 hover:underline cursor-pointer"
+          >
+            Docs
+          </button>
         </div>
       </div>
 
@@ -1258,6 +955,217 @@ export default function HomePage() {
         isOpen={showPrivacyModal} 
         onClose={() => setShowPrivacyModal(false)} 
       />
+
+      {/* Docs Modal */}
+      {showDocsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setShowDocsModal(false)}
+          />
+          
+          {/* Modal Content */}
+          <div className="relative bg-black/90 backdrop-blur-lg border border-white/20 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <h2 className="text-white text-xl font-semibold">QWERY Documentation</h2>
+              <button
+                onClick={() => setShowDocsModal(false)}
+                className="text-white/60 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)] custom-scrollbar">
+              <div className="prose prose-invert max-w-none">
+                {/* Title */}
+                <div className="mb-8">
+                  <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+                    📄 QWERY 
+                    <span className="text-orange-500">–</span> 
+                    <span className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
+                      AI powered prompts for every platform
+                    </span>
+                  </h1>
+                </div>
+
+                {/* About Section */}
+                <section className="mb-8">
+                  <h2 className="text-2xl font-semibold text-orange-500 mb-4">About QWERY</h2>
+                  <p className="text-white/80 leading-relaxed mb-4">
+                    QWERY is more than just a prompt library — it is a <strong className="text-white">complete prompt universe</strong> designed to empower people from every background, industry, and skill level. At its core, QWERY exists to solve one of the biggest challenges in the modern AI era: the <strong className="text-white">struggle with poor-quality prompts</strong>. A great idea often gets lost in translation when users don't know how to express it to an AI system. QWERY bridges that gap by providing carefully structured, high-quality prompts that can instantly unlock <strong className="text-white">clarity, creativity, and productivity</strong>.
+                  </p>
+                  <p className="text-white/80 leading-relaxed">
+                    With QWERY, users no longer need to waste hours experimenting with random prompts or facing the limitations of generic suggestions. Instead, they can <strong className="text-white">access a living ecosystem of curated, tested, and optimized prompts</strong> built for real-world outcomes. Whether someone is writing content, coding, building Web3 apps, designing visuals, researching data, or simply exploring AI for fun, QWERY makes the process <strong className="text-white">faster, smarter, and more inspiring</strong>.
+                  </p>
+                </section>
+
+                {/* Who We Serve Section */}
+                <section className="mb-8">
+                  <h2 className="text-2xl font-semibold text-orange-500 mb-4">Who We Serve</h2>
+                  <p className="text-white/80 leading-relaxed mb-4">
+                    QWERY is designed for <strong className="text-white">everyone</strong>. From the first-time AI user who wants to ask meaningful questions, to professionals who need advanced prompts for specific workflows, QWERY adapts to each unique journey. Our audience includes:
+                  </p>
+                  <ul className="space-y-3 text-white/80">
+                    <li className="flex items-start gap-3">
+                      <span className="text-orange-500 mt-1">•</span>
+                      <div>
+                        <strong className="text-white">Creators & Artists</strong>: Writers, designers, and storytellers who want inspiration and fresh perspectives.
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-orange-500 mt-1">•</span>
+                      <div>
+                        <strong className="text-white">Developers & Builders</strong>: Both <strong className="text-white">Web2 programmers</strong> and <strong className="text-white">Web3 innovators</strong> who need prompts for coding, debugging, documentation, or smart contract development.
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-orange-500 mt-1">•</span>
+                      <div>
+                        <strong className="text-white">Entrepreneurs & Businesses</strong>: Startups, marketers, and enterprises that rely on prompts for campaigns, branding, market research, or product development.
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-orange-500 mt-1">•</span>
+                      <div>
+                        <strong className="text-white">Students & Learners</strong>: Anyone exploring AI to accelerate learning, improve study efficiency, or develop creative projects.
+                      </div>
+                    </li>
+                  </ul>
+                  <p className="text-white/80 leading-relaxed mt-4">
+                    By covering such a broad spectrum of use cases, QWERY ensures that <strong className="text-white">no one is left behind</strong> in the age of artificial intelligence.
+                  </p>
+                </section>
+
+                {/* Platform Coverage Section */}
+                <section className="mb-8">
+                  <h2 className="text-2xl font-semibold text-orange-500 mb-4">Platform Coverage</h2>
+                  <p className="text-white/80 leading-relaxed mb-4">
+                    Unlike many platforms that focus on a single AI tool, QWERY is built to be <strong className="text-white">tool-agnostic and boundaryless</strong>. We provide prompts for multiple leading AI systems and productivity platforms, including but not limited to:
+                  </p>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-white/80 mb-4">
+                    <li className="flex items-center gap-2">
+                      <span className="text-orange-500">•</span>
+                      <strong className="text-white">ChatGPT (OpenAI)</strong>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-orange-500">•</span>
+                      <strong className="text-white">Gemini (Google DeepMind)</strong>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-orange-500">•</span>
+                      <strong className="text-white">Claude (Anthropic)</strong>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-orange-500">•</span>
+                      <strong className="text-white">Perplexity AI</strong>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-orange-500">•</span>
+                      <strong className="text-white">Vercel AI integrations</strong>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-orange-500">•</span>
+                      <span>And emerging platforms in both <strong className="text-white">AI research</strong> and <strong className="text-white">creative tech</strong></span>
+                    </li>
+                  </ul>
+                  <p className="text-white/80 leading-relaxed">
+                    This means that users are never restricted to one ecosystem. Whether they are coding with ChatGPT, researching with Perplexity, prototyping with Claude, or experimenting with Gemini, QWERY ensures that they always have <strong className="text-white">reliable, well-crafted prompts</strong> that actually work.
+                  </p>
+                </section>
+
+                {/* Why QWERY is Different Section */}
+                <section className="mb-8">
+                  <h2 className="text-2xl font-semibold text-orange-500 mb-4">Why QWERY is Different</h2>
+                  <p className="text-white/80 leading-relaxed mb-4">
+                    QWERY's strength lies in its <strong className="text-white">philosophy of inclusivity and practicality</strong>. While most prompt repositories are either too general or too narrow, QWERY has built a <strong className="text-white">multi-layered approach</strong>:
+                  </p>
+                  <ol className="space-y-4 text-white/80">
+                    <li className="flex items-start gap-3">
+                      <span className="text-orange-500 font-bold">1.</span>
+                      <div>
+                        <strong className="text-white">Breadth & Depth Combined</strong> – We cover prompts across every domain (creative, technical, academic, business, entertainment) while also diving deep into niche areas like <strong className="text-white">blockchain dApps, DeFi projects, cybersecurity, and design thinking</strong>.
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-orange-500 font-bold">2.</span>
+                      <div>
+                        <strong className="text-white">Web2 + Web3 Synergy</strong> – Our platform equally supports traditional Web2 workflows and emerging Web3 projects, making QWERY a bridge between the present and the future of digital work.
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-orange-500 font-bold">3.</span>
+                      <div>
+                        <strong className="text-white">Curated Excellence</strong> – Every prompt is tested, refined, and optimized for clarity and usability. We focus on prompts that <strong className="text-white">produce actionable results</strong>, not just text.
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-orange-500 font-bold">4.</span>
+                      <div>
+                        <strong className="text-white">Future-Ready Vision</strong> – QWERY continuously evolves with the AI landscape, adding new categories, refining older prompts, and keeping pace with the rapidly growing world of generative intelligence.
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-orange-500 font-bold">5.</span>
+                      <div>
+                        <strong className="text-white">Community-Driven Evolution</strong> – We believe creativity is collaborative. QWERY allows ideas from diverse users to be shaped, refined, and shared, ensuring a <strong className="text-white">living, breathing ecosystem of knowledge</strong>.
+                      </div>
+                    </li>
+                  </ol>
+                </section>
+
+                {/* Mission and Vision Section */}
+                <section className="mb-8">
+                  <h2 className="text-2xl font-semibold text-orange-500 mb-4">Our Mission and Vision</h2>
+                  <p className="text-white/80 leading-relaxed mb-4">
+                    At QWERY, our mission is simple yet powerful:
+                  </p>
+                  <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-4 mb-4">
+                    <p className="text-white font-medium">
+                      ➡️ To provide <strong>every user, everywhere</strong>, with the right words to unlock the full potential of AI.
+                    </p>
+                  </div>
+                  <p className="text-white/80 leading-relaxed mb-4">
+                    We envision a future where <strong className="text-white">every project, business, and creative journey begins with inspiration and direction</strong>. By eliminating the frustration of poor prompts, QWERY empowers individuals and organizations to <strong className="text-white">move from idea to execution seamlessly</strong>.
+                  </p>
+                  <p className="text-white/80 leading-relaxed">
+                    Our vision is to become the <strong className="text-white">global hub of AI-driven creativity</strong>, where people across industries and geographies come together to discover, share, and refine the prompts that power tomorrow's ideas.
+                  </p>
+                </section>
+
+                {/* Tagline Section */}
+                <section className="mb-8">
+                  <h2 className="text-2xl font-semibold text-orange-500 mb-4">Tagline</h2>
+                  <div className="bg-gradient-to-r from-orange-500/10 to-orange-600/10 border border-orange-500/20 rounded-lg p-6 text-center">
+                    <p className="text-xl text-white font-medium mb-2">✨</p>
+                    <p className="text-lg text-white italic">
+                      "Discover Creative Inspiration and Ideas — For Every Project and Vision."
+                    </p>
+                  </div>
+                  <p className="text-white/80 leading-relaxed mt-4">
+                    This tagline reflects our belief that creativity should have <strong className="text-white">no boundaries</strong>, and that inspiration should be accessible to <strong className="text-white">everyone, everywhere, at any time</strong>.
+                  </p>
+                </section>
+
+                {/* Official Website Section */}
+                <section className="mb-8">
+                  <h2 className="text-2xl font-semibold text-orange-500 mb-4">Official Website</h2>
+                  <div className="bg-black/50 border border-white/10 rounded-lg p-4">
+                    <p className="text-white font-mono text-lg">
+                      🔗 <a href="https://qwery.xyz" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-400 transition-colors underline">qwery.xyz</a>
+                    </p>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Celebration Notification */}
       {showCelebration && (
